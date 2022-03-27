@@ -29,10 +29,19 @@ jobs:
       run: aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
 
     - name: Build, tag, and push image to Amazon ECR
+      uses: ilteoood/docker_buildx@1.0.5
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: simplebank
         IMAGE_TAG: ${{ github.sha }}
-      run: |
-        docker build --platform linux/arm64 -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      with:
+        publish: true
+        imageName:  $ECR_REGISTRY/$ECR_REPOSITORY
+        dockerUser: AWS
+        dockerUserPassword: eyJwYXlsb2FkIjoiY2xOUDd3eERaSU9memp2WEhPTEIzaXlNZXZ3ZFpMdE1EVmdGSWJYV1I4R1FoWDROclAwcFlpUDNaOTJqc0tweWhMc1lUUkZqcFdkRzh0WHE0Y1VMQURQYmNzc24rRUxpK3ZWODVkdjFObzZMWllieGtYWFFTUjBXcm5SU0FGZER3TWIyREhqbDBwZ0xkWDZJc2ovd1BDTHh6aHRtQzk4Z2pMNit5a2VEeCs4QkhpVXhjQjFsaEpjRGJaT2xvZy91MjZIMFFrQmU1Z2xvVVlEbXM0UVYxMGgyUkpmMTVaSVE0VHdyTjI0Z2tuQm5TZUptU3FpeEtTNEJieFZvOTU0TjN3MmtrVU9Bd1pCd3Rua2dtQVJITytPSnExTU9qZHpUMmRnZDdTSzVRM3RPVHV4WHZ6WlpJMndmVlMzemZjQTRmZVlYQXRDaDZqRGVDRnRWTkdnL0dGRTlqdTFmUDZqclI2eE5PeVA0bmVvN3VyWEc2ZzN2VThQem5ncVh4ak1GaFl0TStSb0hBeC8wZmRCL3RieWlBbndieFlzbzRJZTI5TEQydE5Lc0tBak1EalR0K1RsVGRyVGN6Y1oyNTc2TFRFeFhwL2FDSUx5OGt1MXlFUEVGQ3dyaVFKSTg0L0lTaGNpM21FVjZLVDNkdkY2M3E1U3hZRkhMclRaN0FGQk5wYjVGZ3NtUXZGWExxQTNwYytvdnNQbVp6SEtnM0RFU3N5dnFzQnYySmtia3F0K2ZyK0hQdm04akJrV3A5aTVKTXdZUVJlUm14RVlKSXlPZGlsYTBPMy9Cc1FjeVlqR1BFY25UeUhub3cxeXIvY3ZhWnJIbVFjeEdMNkFQRSszM1Vac0JGbjJSNnNoMWJDQ3IwL1plT1pEYjEwK1ByWElLWXRUVER6KytOU1dTRFk0aG1lWG83OWZOajRZUkh2UTJzUGpzc2JUOVR1QWlLdGFTWmJZbzN1emdYbXRvWVVTUW1vbzMvRlhXV3hRb2Q5bEVqK0lRc1lnb0dRdkNFWUFpc3hHUWJrTU1INnNmMWREV1hoSGlDVlRISTZmaXE4dG53clBUeDAzZW1OTElxc0Y0NStudjloYjBDMTBNRTdpU1MrWHhXaDErUWprbTJKajI2cHVGZXgrZHM1UVJ2WERBdkNUbEhOSDBHVVJlSnR0RnpuYVdXRlpoVjl3azZYUEQyclJkVDRlKys0Zk9sNitPbWlHMVhDZCt0c1V6dmRUL3lyTDdMdGhmd3BWMmtycUFST2hDTE1aemxsbENuRmlxOCt3VGthUytWTVl6b2FjdkFvL3JGcUw5bjlBRjd1cDF2MnJGWG56TEhtMFFWZHh1bVFWQlZaNHV3RXlqVFBpaTA3eVkvTnQrandqdkladW5sQT09IiwiZGF0YWtleSI6IkFRRUJBSGlqRUZYR3dGMWNpcFZPYWNHOHFSbUpvVkJQYXk4TFVVdlU4UkNWVjBYb0h3QUFBSDR3ZkFZSktvWklodmNOQVFjR29HOHdiUUlCQURCb0Jna3Foa2lHOXcwQkJ3RXdIZ1lKWUlaSUFXVURCQUV1TUJFRURDY0xJQW1aaERFdjUrajVDZ0lCRUlBN0tCR2trN1Z3WVpxOG1PaGZKdFdrZkRNUXRmQkUyaVhYSUlqbzV5M0tscitNK2hzejFBbklqZFJUc3Z6amU4dCtBSXZvY09yMWNLMXVuV0k9IiwidmVyc2lvbiI6IjIiLCJ0eXBlIjoiREFUQV9LRVkiLCJleHBpcmF0aW9uIjoxNjQ4NDM3ODg3fQ==
+        platform: linux/amd64,linux/arm64
+        dockerServer: 297182397088.dkr.ecr.us-west-1.amazonaws.com/simplebank
+        tag: $IMAGE_TAG
+      # run: |
+      #   docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+      #   docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
