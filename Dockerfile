@@ -1,7 +1,7 @@
 FROM golang:1.16-alpine3.13 AS builder
 WORKDIR /app
 COPY . .
-RUN go build -mod=mod -o main main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -mod=mod -o main main.go
 RUN apk add curl
 RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.1/migrate.linux-arm64.tar.gz | tar xvz
         
