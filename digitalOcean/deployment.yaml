@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: simple-bank-api-deployment
+  namespace: his
   labels:
     app: simple-bank-api
 spec:
