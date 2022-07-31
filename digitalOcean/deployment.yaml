@@ -20,5 +20,9 @@ spec:
         image: registry.digitalocean.com/hjfu/simplebank:latest
         ports:
         - containerPort: 8081
+        env:
+            - name: DB_SOURCE
+              value: >-
+                postgresql://root:secret@postgre-postgresql-headless.his:5432/simple_bank?sslmode=disable
       #imagePullSecrets:
       #- name: aws-ecr
