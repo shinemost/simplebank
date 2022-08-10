@@ -19,6 +19,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
+
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
@@ -30,9 +34,26 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
+
+	RunMigrate(config.MigrateURL, config.DBSource)
 	store := db.NewStore(conn)
+
 	go runGatewayServer(config, store)
 	runGrpcServer(config, store)
+}
+
+func RunMigrate(migrateURL string, dbSource string) {
+	m, err := migrate.New(migrateURL, dbSource)
+
+	if err != nil {
+		log.Fatal("cannot create new migrate instance:", err)
+	}
+
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("failed to run migrate up:", err)
+	}
+
+	log.Println("db migrate successfully")
 }
 
 func runGinServer(config util.Config, store db.Store) {
