@@ -36,7 +36,7 @@ service SimpleBank {
     };
     rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse){
       option (google.api.http) = {
-          post: "/v1/update_user"
+          patch: "/v1/update_user"
           body: "*"
       };
       option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

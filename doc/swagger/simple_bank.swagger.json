@@ -90,7 +90,7 @@
       }
     },
     "/v1/update_user": {
-      "post": {
+      "patch": {
         "summary": "update user",
         "description": "User this API to update  User",
         "operationId": "SimpleBank_UpdateUser",

@@ -3,6 +3,7 @@ package gapi
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	db "github.com/simplebank/db/sqlc"
 	"github.com/simplebank/pb"
@@ -14,6 +15,7 @@ import (
 )
 
 func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+	//todo:add authorization
 	violations := validateUpdateUserRequest(req)
 	if violations != nil {
 		return nil, InvalidArgumentError(violations)
@@ -40,6 +42,10 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 		arg.HashedPassword = sql.NullString{
 			String: hashedPassword,
 			Valid:  true,
+		}
+		arg.PasswordChangedAt = sql.NullTime{
+			Time:  time.Now(),
+			Valid: true,
 		}
 	}
 
