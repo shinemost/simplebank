@@ -13,9 +13,10 @@ type Config struct {
 	HttpServerAddress    string        `mapstructure:"HTTP_SERVER_ADDRESS"`
 	GRPCServerAddress    string        `mapstructure:"GRPC_SERVER_ADDRESS"`
 	TokenSymmetricKey    string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
+	MigrateURL           string        `mapstructure:"MIGRATE_URL"`
+	RedisAddress         string        `mapstrucure:"REDIS_ADDRESS"`
 	AccessTokenDuration  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	RefreshTokenDuration time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
-	MigrateURL           string        `mapstructure:"MIGRATE_URL"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
